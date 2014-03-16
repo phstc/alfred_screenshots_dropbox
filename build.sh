@@ -1,0 +1,1 @@
+zip -r alfred_screenshots_dropbox.alfredworkflow *
