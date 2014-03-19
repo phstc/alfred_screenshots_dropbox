@@ -29,16 +29,20 @@ end
 
 config = JSON.parse(File.read('./config.json'))
 
-DROPBOX_FOLDER      = config['dropbox_folder']
-DROPBOX_USER        = config['dropbox_user']
-SCREENSHOT_FILENAME = generate_screenshot_filename
-DROPBOX_URL         = "https://dl.dropboxusercontent.com/u/#{DROPBOX_USER}/Screenshots/#{URI.escape(SCREENSHOT_FILENAME)}"
-BITLY_USER          = config['bitly_user']
-BITLY_KEY           = config['bitly_key']
+DROPBOX_FOLDER       = config['dropbox_folder']
+DROPBOX_USER         = config['dropbox_user']
+SCREENSHOT_FILENAME  = generate_screenshot_filename
+SCREENSHOT_FILE_PATH = "#{DROPBOX_FOLDER}/#{SCREENSHOT_FILENAME}"
+DROPBOX_URL          = "https://dl.dropboxusercontent.com/u/#{DROPBOX_USER}/Screenshots/#{URI.escape(SCREENSHOT_FILENAME)}"
+BITLY_USER           = config['bitly_user']
+BITLY_KEY            = config['bitly_key']
 
 Dir.mkdir(DROPBOX_FOLDER) unless Dir.exist?(DROPBOX_FOLDER)
 
-`screencapture -i "#{DROPBOX_FOLDER}/#{SCREENSHOT_FILENAME}"`
+`screencapture -i "#{SCREENSHOT_FILE_PATH}"`
+
+# Returns if the screenshot was canceled (no file created)
+return unless File.exist?(SCREENSHOT_FILE_PATH)
 
 wait_dropbox_sync(DROPBOX_URL)
 
