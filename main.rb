@@ -41,9 +41,15 @@ Dir.mkdir(DROPBOX_FOLDER) unless Dir.exist?(DROPBOX_FOLDER)
 
 `screencapture -i "#{SCREENSHOT_FILE_PATH}"`
 
-# Returns if the screenshot was canceled (no file created)
+# If user canceled the screenshot the fill will not exist
 return unless File.exist?(SCREENSHOT_FILE_PATH)
 
-wait_dropbox_sync(DROPBOX_URL)
+confirm_screenshot = `osascript -e 'display dialog "Confirm the screenshot?"'`
 
-puts bitly(DROPBOX_URL, BITLY_USER, BITLY_KEY)
+if confirm_screenshot != ''
+  wait_dropbox_sync(DROPBOX_URL)
+
+  puts bitly(DROPBOX_URL, BITLY_USER, BITLY_KEY)
+else
+  File.delete(SCREENSHOT_FILE_PATH)
+end
